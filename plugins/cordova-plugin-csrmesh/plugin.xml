@@ -1,0 +1,84 @@
+//记得配置权限
+//找相关插件和原生的对比填好
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin 
+xmlns="http://apache.org/cordova/ns/plugins/1.0" 
+xmlns:android="http://schemas.android.com/apk/res/android" 
+xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" 
+id = "cordova-plugin-csrmesh"
+version="0.0.1">
+  <engines>
+    <engine name="cordova" version=">=3.0.0" />
+  </engines>
+  <name>csrmesh</name>
+  <description>Use the Bluetooth Low Energy plugin to connect your Cordova app to new Bluetooth devices like heart rate monitors, thermometers, etc...</description>
+  <author>CLchenliang</author>
+  <keywords>csrmeshLight</keywords>
+  <!-- <license>MIT</license> -->
+  <js-module src="www/csrmesh.js" name="csrmesh">
+    <clobbers target="csrmesh" />
+  </js-module>
+  <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="csrmesh">
+                <param name="android-package" value="com.cl.cordova.csrmesh.csrmeshPlugin"/>
+            </feature>
+        </config-file>
+        
+        
+<!-- 
+        <config-file target="AndroidManifest.xml" parent="/manifest"> -->
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+            <uses-permission android:name="android.permission.BLUETOOTH"/>
+            <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+            <!-- <service android:name="com.csr.mesh.MeshService" android:enabled="true"/> -->
+            <uses-feature
+      			android:name="android.hardware.bluetooth_le"
+      			android:required="true"/>
+            <service
+	            android:name="com.csr.mesh.MeshService"
+	            android:enabled="true">
+            	<intent-filter>         
+                    <action android:name="com.csr.mesh.MeshService"/> 
+                </intent-filter>  
+        	</service>
+        </config-file>
+         <config-file target="AndroidManifest.xml" parent="/manifest/application">
+  
+            <service android:name="com.csr.mesh.MeshService">
+                <intent-filter>         
+                    <action android:name="com.csr.mesh.MeshService"/> 
+                </intent-filter>     
+            </service>
+            <uses-feature
+      			android:name="android.hardware.bluetooth_le"
+      			android:required="true"/>
+			<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+			<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+            <uses-permission android:name="android.permission.BLUETOOTH"/>
+            <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+        </config-file>
+
+        <source-file src="src/android/csrmeshPlugin.java"
+            target-dir="src/com/cl/cordova/csrmesh"/>
+        <!-- <source-file src="src/android/CsrmeshMainActivity.java"
+            target-dir="src/com/cl/cordova/csrmesh"/> -->
+        <source-file src="src/android/meshlibrary.jar"
+        	target-dir="libs"/>
+        <source-file src="src/android/sc-light-jdk15on-1.47.0.3.jar"
+        	target-dir="libs"/>
+        <source-file src="src/android/scpkix-jdk15on-1.47.0.2.jar"
+        	target-dir="libs"/>
+        <source-file src="src/android/scprov-jdk15on-1.47.0.2.jar"
+        	target-dir="libs"/>
+        		
+	
+	
+        	
+        
+</platform>
+ 
+  
+</plugin>

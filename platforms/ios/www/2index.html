@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <!--
+        Customize this policy to fit your own app's needs. For more guidance, see:
+            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+        Some notes:
+            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+
+
+        <title>Hello World</title>
+    </head>
+    <body>
+        <div class="app">
+            <h1>Apache Cordova</h1>
+            <div id="deviceready" class="blink">
+                <p class="event listening">Connecting to Device</p>
+                <p class="event received">Device is Ready</p>
+            </div>
+            <!-- <p> <button id="scanButton1" onclick="scanButtonjj()">扫描</button>  <button id="clickButton1" onclick="clickButtonjj()">连接</button> <button id="changeButton1" onclick="changeButtonjj()">改色</button> </p>
+                <p> -->
+            <p><button id="startScan">startScan</button><button id="stopScan">stopScan</button><button id="findMesh">findMesh</button><button id="setPower">setPower</button></p>
+            <button id="blueClick">blueClick</button><button id ="setColor">RandomColor</button><button id="setBrightness">亮度</button><button id="setGroup">分组</button>
+            <button id="getAssociableDevice">获取待绑定的设备</button><button id="associateDevice">绑定设备</button><button id="getDevcieId">获取ID</button>
+            <p>
+                <button id="store">保存数据</button><button id="read">读取数据</button>
+            </p>
+            <button id="color">新页面</button> <button id="meshL">mesh-L</button>
+            <button id="meshW">mesh-W</button>
+            <ul id="deviceList">
+            </ul>
+        </div>
+        <!--2017年4月1日 ：-->
+        <div id="leftSlider" style="display:none;border: dashed ;background-color: #4B946A;">
+
+            <div>
+                <button style="float: right;top: 0%;" onclick="leftshow()">返回</button>
+            </div>
+            <div  style="clear: both;"onclick="showGroups()" >
+                <button style="width: 100%;">分组控制</button>
+                <table id="groupControl" style="width: 100%;"></table>
+            </div>
+            <div  style="clear: both;"onclick="showLights()">
+                <button style="width: 100%;">单个控制</button>
+                <table id="sigleControl" style="width: 100%;"></table>
+            </div>
+
+
+        </div>
+
+    </body>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/require.js"></script>
+    <!--<script type="text/javascript" src="js/fun.js"></script>-->
+    <script type="text/javascript" src="js/index.js"></script>
+</html>
+
+
+<!-- Cordova Cooking 书中代码 -->
+<!--
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="CONTENT-TYPE" content="text/html" charset="utf-8">
+        <meta name="viewport" content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,width=device-width;"/>
+        <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+        <script type="text/javascript" charset="utf-8">
+            function onBodyLoad(){
+                document.addEventListener("deviceready",onDeviceReady,false);
+            }
+            function onDeviceReady(){
+                br = "<br />";
+                var ele = document.getElementById("info");
+
+                ele.innerHTML = 'cordova version: ，，，';
+            }
+        </script>
+    </head>
+
+    <body onload="onBodyLoad()"
+</html>-->

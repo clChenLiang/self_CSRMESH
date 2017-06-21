@@ -1,0 +1,26 @@
+{
+  "name": "com.cl.cordova.plugin.csrmesh",
+  "version": "2.0.0",
+  "description": "CSRmesh cordova plugin sdk",
+  "cordova": {
+    "id": "com.cl.cordova.plugin.csrmesh",
+    "platforms": [
+      "android"
+    ]
+  },
+  "keywords": [
+    "cordova",
+    "csrmesh",
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "author": "clchenliang",
+  "license": "Apache-2.0",
+  "engines": {
+    "cordovaDependencies": {
+      "2.0.0": {
+        "cordova": ">100"
+      }
+    }
+  }
+}

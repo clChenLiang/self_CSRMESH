@@ -1,0 +1,538 @@
+//插件调用
+package com.cl.cordova.csrmesh;
+
+import org.apache.cordova.CallbackContext;
+import org.apache.cordova.CordovaArgs;
+import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.LOG;
+import org.apache.cordova.PluginResult;
+
+import org.apache.cordova.CallbackContext;
+import org.apache.cordova.CordovaArgs;
+import org.apache.cordova.CordovaInterface;
+import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.CordovaWebView;
+import org.json.JSONException;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.lang.ref.WeakReference;
+import java.io.Console;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+//import CsrmeshMainActivity.MeshHandler;
+//import CsrmeshMainActivity.blueScaninfo;
+import android.widget.Toast;
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothManager;
+import android.bluetooth.BluetoothSocket;
+import android.bluetooth.BluetoothAdapter.LeScanCallback;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.IntentFilter;
+import android.os.Handler;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.os.Message;
+import android.provider.Settings;
+import android.util.Log;
+import android.view.View;
+
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+
+import com.csr.mesh.MeshService;
+import com.csr.mesh.PowerModelApi;
+import com.csr.mesh.PowerModelApi.PowerState;
+import com.csr.mesh.ConfigModelApi;
+import com.csr.mesh.LightModelApi;
+import com.csr.mesh.AttentionModelApi;
+
+
+
+public class csrmeshPlugin extends CordovaPlugin{
+	
+	private BluetoothAdapter mBtAdapter = null;
+//	private final BluetoothManager btManager ;
+	private  MeshService mService = null;
+	private final  Handler mMeshHandler = new MeshHandler(this);
+	private int mColorToSend = Color.rgb(0, 0, 0);
+	private int mColor = 0;
+	private boolean  mNewColor = true;
+	private int mNumConnectAttempts=0;
+	private boolean llll;
+	private static HashSet<String> mScanAddreses = new HashSet<String>();
+	private CallbackContext mCallbackContext = null;
+	private String address;
+	private int brightness = 50;
+	private String netWorkKey = "123";
+//	需要添加一个设置亮度的函数！！！ 2017年1月3日
+	
+	@Override
+	public boolean execute(String action ,JSONArray args,
+			CallbackContext callbackContext)throws JSONException{
+		
+		try{
+			if (mBtAdapter == null) {
+			Log.v("BLE-CSR","mBtAdapter == null");
+            Activity activity = cordova.getActivity();
+            final BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
+            mBtAdapter = bluetoothManager.getAdapter();
+			}
+		}catch(Exception e){
+				android.widget.Toast.makeText(cordova.getActivity()," s "+e.toString(),Toast.LENGTH_LONG).show();
+				callbackContext.error("errors"+e.toString());
+				return false;
+			}
+
+//		public /*final*/ WeakReference<CsrmeshMainActivity>  mActivity = new WeakReference<CsrmeshMainActivity>(CsrmeshMainActivity);
+		if("startScan".equals(action)){
+//			CsrmeshMainActivity mAc = new CsrmeshMainActivity();
+//			mAc.startScan();//参数  View v 怎么处理呢
+			//方案一：另写一个无参的方法
+			
+//			方案二：
+			try{
+				
+//				try{
+//					
+//					
+////					Activity activity = cordova.getActivity();
+////		//删除                BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
+////					BluetoothManager btManager = (BluetoothManager)activity.getSystemService(Context.BLUETOOTH_SERVICE);
+////					mBtAdapter = btManager.getAdapter();
+//				}catch(Exception e){
+//					android.widget.Toast.makeText(cordova.getActivity()," s "+e.toString(),Toast.LENGTH_LONG).show();
+//					callbackContext.error("errors"+e.toString());
+//					return false;
+//				}
+				mCallbackContext = callbackContext;
+				startScan();
+//				android.widget.Toast.makeText(cordova.getActivity()," cl ",Toast.LENGTH_LONG).show();
+				Log.v("CSR","startScan");	
+			}catch(Exception e){
+				android.widget.Toast.makeText(cordova.getActivity()," s "+e.toString(),Toast.LENGTH_LONG).show();
+				callbackContext.error("errors"+e.toString());
+				return false;
+//				callbackContext.error("error"+e);
+			}
+			
+//可以引用现成的插件，不需要自己写---2017年1月3日
+		}else if("stopScan".equals(action)){
+			try{
+				Log.v("CSR","stopScan");
+				stopScan();
+			}catch(Exception e){
+				android.widget.Toast.makeText(cordova.getActivity()," s "+e.toString(),Toast.LENGTH_LONG).show();
+				callbackContext.error("errors"+e.toString());
+				return false;
+//				callbackContext.error("error"+e);
+			}
+			
+		}else if("findMesh".equals(action)){
+		
+			//连接Mesh网络
+//			或者 startActivity()?
+//			暂定此处自动setKey
+			Log.v("CSR","findMesh");
+//2016-12-28 屏蔽启动的Activity
+//			Intent intent = new Intent(cordova.getActivity(),CsrmeshMainActivity.class);
+//			cordova.getActivity().startActivity(intent);
+//			//此处应该为csrmesh.java里的MainActivity
+//2016-12-23			/*this.cordova.getActivity().*/startActivity(cordova.getActivity(),intent);
+			
+//			//待查，不定
+			try{
+//加参数，address
+//				address = args[0]||
+				address = args.getString(0)/*||"00:02:5B:00:15:83"*/;
+				conn();
+				
+				Log.v("CSR_Plugin","conn start!");
+//2016-12-28 20:14:14
+			}catch(Exception e){
+				android.widget.Toast.makeText(cordova.getActivity()," s "+e.toString(),Toast.LENGTH_LONG).show();
+				callbackContext.error("errors"/*+e.toString()*/);
+//				差别错开，对比callbackContext.error的不同
+				return false;
+				
+//				callbackContext.error("error"+e);
+			}
+			
+			//待定，2016-12-21-16:18 测试不试，待第一个成功后，再写
+					
+		}else if("setKey".equals(action)){
+			//暂无，不需要实现
+			Log.v("CSR","SETKEY");
+			Log.v("CSR","SETKEY");
+		}else if("setPower".equals(action)){
+			Log.v("CSR","setPower");
+//			mAc.off();//args[0]为deviceId
+			Log.v("CSR","State : "+args.getString(1)+" deviceId : "+ args.getInt(0)/*+args.getInt(1)*/);
+//args.getString()  getInt  getJSONArrary  ,后面的参数，都是唯一的，为参数列表中的序号
+			if("on".equals(args.getString(1))){
+				Log.v("CSR","state ："+args.getString(1));
+				PowerModelApi.setState(args.getInt(0), PowerState.ON, false);
+//				PowerModelApi.setState(0, PowerState.ON, false);
+			}else if("off".equals(args.getString(1))){
+				Log.v("CSR","state ："+args.getString(1));
+				PowerModelApi.setState(args.getInt(0), PowerState.OFF, false);
+			}
+			
+//			Toast.makeText(cordova.getActivity(), "setPower + ", Toast.LENGTH_LONG).show();
+		}else if("setColor".equals(action)){
+			
+//			mColorToSend = args.getInt(1);
+			float[] hsv = new float[3];
+			mColor = args.getInt(1);
+	        Color.colorToHSV(mColor, hsv);
+	        hsv[2] = ((float) brightness + 1) / 100.0f;
+	        mColorToSend = Color.HSVToColor(hsv);
+	        Log.v("CSR","setColor :"+mColorToSend);
+	        mNewColor = true;
+//			LightModelApi.setRgb(0, red, green, blue, (byte)0xFF, 0, false);
+//			mDeviceId = args.getInt(0);
+		}else if("setBrightness".equals(action)){
+			
+			brightness = args.getInt(1);
+			Log.v("CSR","setBrightness"+brightness);
+			mNewColor = true;
+//颜色转换 2017年1月4日
+			float[] hsv = new float[3];
+	        Color.colorToHSV(mColor, hsv);
+	        hsv[2] = ((float) brightness + 1) / 100.0f;
+	        mColorToSend = Color.HSVToColor(hsv);
+			
+		}
+//		callbackContext.success("succ");
+		return true;
+	}
+	
+	
+//	将MainAcitity里自定义的函数改写到此：
+	public void startScan(){
+		if (mBtAdapter.isEnabled()) {
+//          scanLeDevice(true);
+			try{
+//2017年1月3日 需要加停止扫描的延时函数！！！
+				mBtAdapter.startLeScan(mLeScanCallback);
+			}
+			catch(Exception e){
+				System.out.println("ERRORERRORERRORERRORERROR :  "+e);
+//				Toast.makeText(this, "ERROR+"+e, Toast.LENGTH_LONG).show;
+			}
+      }else{
+      	Toast.makeText(cordova.getActivity(),"蓝牙未打开！",Toast.LENGTH_LONG).show();
+      }
+	}
+	
+	public void stopScan(){
+		mBtAdapter.stopLeScan(mLeScanCallback);
+		Log.v("BLE", "stop the LeScan!");
+	}
+	
+	public void conn(){
+		Log.v("BLE", "CONN button is clicked ");
+		try{
+			final Activity act = cordova.getActivity();
+		
+			Intent bindIntent = new Intent(act, MeshService.class);
+//			Intent bindIntent =new Intent(this,MeshService.class);
+//			尝试bindService的另一种引用方法
+//	        cordova.getActivity().bindService(bindIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
+			act.startService(bindIntent);
+			act.getApplicationContext().bindService(bindIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
+			
+			
+		}catch(Exception e){
+			Log.v("BLE", " conn error:  "+e);
+		}
+		
+        Log.v("BLE", "CONN button is clicked ");
+	}
+	
+//	2016年12月23日：注释掉两句scanInfo,data.add();
+	   private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
+	        @Override
+	        public void onLeScan(final BluetoothDevice device, final int rssi, final byte[] scanRecord) {
+//	添加  列表 ：deviceScaned        	
+	                	Log.v("BLE", "run in the callback!");
+	                	if (device.getName() == null) {
+	                		return;
+	                	}
+	                	if (!mScanAddreses.contains(device.getAddress())) {    
+//	                		2017年1月3日  测试方便，不局限于低功耗蓝牙  --- 也可以不用，因为本来调用的就是LESCAN
+	                       /* if (device.getType() == BluetoothDevice.DEVICE_TYPE_LE && 
+	                        		scanRecord[INDEX_UUID_1] == UUID_1 && scanRecord[INDEX_UUID_2] == UUID_2) {
+//	                            ScanInfo scanResult = new ScanInfo(device.getName(), device.getAddress(), rssi);                        
+	                            mScanAddreses.add(device.getAddress());
+//	                            mScanResults.add(scanResult);
+//	                            Collections.sort(mScanResults);
+//	                            mScanResultsAdapter.notifyDataSetChanged();
+	                        }*/
+	                        mScanAddreses.add(device.getAddress());
+//	                        Log.v('CSR',"新出现的DEVICE : "+device.getAddress());
+	                        Log.v("CSR","new device is : "+device.getAddress());
+//2017年1月3日 待解决---多次回调
+	                        PluginResult result = new PluginResult(PluginResult.Status.OK,device.getAddress());
+	                        result.setKeepCallback(true);
+	                        mCallbackContext.sendPluginResult(result);
+//	                        mCallbackContext.success(device.getAddress());
+	                    }
+	                    
+	                    
+	                	Log.v("BLE", device.getName()+"  : "+device.getAddress()+"uuid: "+device.getUuids());
+
+	        }
+	    };
+	    private ServiceConnection mServiceConnection = new ServiceConnection() {
+	        public void onServiceConnected(ComponentName className, IBinder rawBinder) {
+	        	Log.v("BLE", "mService localBinder is success");
+	            mService = ((MeshService.LocalBinder) rawBinder).getService();
+	            
+	            
+	            mService.setDeviceDiscoveryFilterEnabled(true);
+//		        新加的 setNetworkPassPhrase -- 2016年12月7日
+		        mService.setNetworkPassPhrase(netWorkKey);
+		        
+	            if (mService != null) {
+	            	// Start the required transport.                
+	                mMeshHandler.postDelayed(connectTimeout, 10000);
+//	            	缺少一个LocalStorage 即    restoreSettings
+	                connect();
+	            }
+	        }
+
+	        public void onServiceDisconnected(ComponentName classname) {
+	            mService = null;
+	            Log.v("BLE-CSR","onServiceDisconnected");
+	        }
+	 };
+	 
+	 
+//	 可以从 findMesh 中抽离出来，独立应用于连接函数！！！
+	 private void connect() {
+	    	BluetoothDevice bridgeDevice = mBtAdapter.getRemoteDevice(address);
+ 	
+	    	Log.d("BLE", "Connect attempt "  + ", address: " + bridgeDevice.getAddress()+"uuid: "+bridgeDevice.getUuids());
+	    	mService.setHandler(mMeshHandler);
+	        mService.setLeScanCallback(mScanCallBack);
+	        mService.connectBridge(bridgeDevice);
+	       
+	 }
+	    
+	 private static class MeshHandler extends Handler {
+//2016-12-28 20:26:59 ，因为原代码中，这段代码生效，但在插件里去掉Activity后不生效，准备改回activity形式
+	        private final WeakReference<csrmeshPlugin> mActivity;
+
+	        public MeshHandler(csrmeshPlugin activity) {
+	            mActivity = new WeakReference<csrmeshPlugin>(activity);
+	        }
+
+	        public void handleMessage(Message msg) {
+	        	csrmeshPlugin parentActivity = mActivity.get();
+	            switch (msg.what) {
+	            case MeshService.MESSAGE_LE_CONNECTED: {            	
+	                Log.v("BLE","MESSAGE_LE_CONNECTED");
+	                parentActivity.onConnected();
+	                int uuidHash = msg.getData().getInt(MeshService.EXTRA_UUIDHASH_31);
+	                Log.v("BLE", "UUIDhash : "+uuidHash);
+//	                目前已经连接上灯泡，接下来就是控制灯泡的明暗与颜色了
+//	                byte red = (byte)(Color.red(Color.BLUE) & 0xFF);
+//	                byte green = (byte)(Color.green(Color.BLUE) & 0xFF);
+//	                byte blue = (byte)(Color.blue(Color.BLUE) & 0xFF);
+//	                LightModelApi.setRgb(0x0000, red, green, blue,  (byte)0xFF, 1000, false);
+//	                第一个参数  deviceId 待查，应该不是address
+	                break;
+	            }
+	            case MeshService.MESSAGE_LE_DISCONNECTED: {
+
+	                int uuidHash = msg.getData().getInt(MeshService.EXTRA_UUIDHASH_31);
+	                Log.v("BLE", "UUIDhash : "+uuidHash);
+
+	            	Log.v("BLE", "MESSAGE_LE_DISCONNECTED--断开连接");
+	            	break;
+	            }
+	            case MeshService.MESSAGE_TIMEOUT:{
+
+	                int uuidHash = msg.getData().getInt(MeshService.EXTRA_UUIDHASH_31);
+	                Log.v("BLE", "UUIDhash : "+uuidHash);
+
+	            	int expectedMsg = msg.getData().getInt(MeshService.EXTRA_EXPECTED_MESSAGE);
+	                int id;
+	                int meshRequestId;
+	                if (msg.getData().containsKey(MeshService.EXTRA_UUIDHASH_31)) {
+	                	id = msg.getData().getInt(MeshService.EXTRA_UUIDHASH_31);
+	                }
+	                else {
+	                	id = msg.getData().getInt(MeshService.EXTRA_DEVICE_ID);
+	                }
+	                meshRequestId = msg.getData().getInt(MeshService.EXTRA_MESH_REQUEST_ID);
+	                Log.v("BLE", "MESSAGE_TIMEOUT  :  "+id+"  "+ meshRequestId);
+	                break;
+	            }
+	            case MeshService.MESSAGE_DEVICE_DISCOVERED: {
+
+	                int uuidHash = msg.getData().getInt(MeshService.EXTRA_UUIDHASH_31);
+	                Log.v("BLE", "UUIDhash : "+uuidHash);
+
+//	                ParcelUuid uuid = msg.getData().getParcelable(MeshService.EXTRA_UUID);                
+//	                int uuidHash = msg.getData().getInt(MeshService.EXTRA_UUIDHASH_31);
+	                int rssi = msg.getData().getInt(MeshService.EXTRA_RSSI);    
+	                int ttl = msg.getData().getInt(MeshService.EXTRA_TTL);
+//	                Log.v("BLE", "Associated :"+uuid);
+	                parentActivity.associateDevice(uuidHash);
+	                parentActivity.mService.setDeviceDiscoveryFilterEnabled(false);
+//	                在这里实现 绑定功能！！！
+	                
+//	                associateDevice(uuidHash);
+//	                确定 “0” 是正确的吗？ shortCode
+	                Log.v("BLE", "MESSAGE_DEVICE_DISCOVERED  :  "+uuidHash+"  "+ ttl);
+	                break;
+	            }
+	            case MeshService.MESSAGE_DEVICE_APPEARANCE: {
+	                int uuidHash = msg.getData().getInt(MeshService.EXTRA_UUIDHASH_31);
+	                Log.v("BLE", "UUIDhash : "+uuidHash);
+
+	            	Log.v("BLE", "MESSAGE_DEVICE_APPEARANCE  :  ");
+	                break;
+	            }
+	            case MeshService.MESSAGE_DEVICE_ASSOCIATED: {
+	            	
+	            	Log.v("BLE","associated is connetted ! deviceId is "+ msg.getData().getInt(MeshService.EXTRA_DEVICE_ID));
+	                // New device has been associated and is telling us its device id.
+	                // Request supported models before adding to DeviceStore, and the UI.
+/*2016-12-23      int deviceId = msg.getData().getInt(MeshService.EXTRA_DEVICE_ID);
+	                int uuidHash = msg.getData().getInt(MeshService.EXTRA_UUIDHASH_31);
+	                ParcelUuid uuid = msg.getData().getParcelable(MeshService.EXTRA_UUID);                
+//	                int uuidHash = msg.getData().getInt(MeshService.EXTRA_UUIDHASH_31);
+	                int rssi = msg.getData().getInt(MeshService.EXTRA_RSSI);    
+	                int ttl = msg.getData().getInt(MeshService.EXTRA_TTL);
+	                Log.v("BLE", "New device associated with id " + String.format("0x%x", deviceId));
+
+//	                int uuidHash = msg.getData().getInt(MeshService.EXTRA_UUIDHASH_31);
+	                Log.v("BLE", "UUIDhash : "+uuidHash);*/
+
+	               
+	                break;
+	            }
+	            case MeshService.MESSAGE_CONFIG_DEVICE_INFO: {
+//2016-12-23	                int uuidHash = msg.getData().getInt(MeshService.EXTRA_UUIDHASH_31);
+//	                Log.v("BLE", "UUIDhash : "+uuidHash);
+
+	                Log.v("BLE", "MESSAGE_CONFIG_DEVICE_INFO");
+	                break;
+	            }
+	            case MeshService.MESSAGE_GROUP_NUM_GROUPIDS: {
+//2016-12-23	                int uuidHash = msg.getData().getInt(MeshService.EXTRA_UUIDHASH_31);
+//	                Log.v("BLE", "UUIDhash : "+uuidHash);
+
+	                Log.v("BLE", "MESSAGE_GROUP_NUM_GROUPI");
+	                break;
+	            }
+	            case MeshService.MESSAGE_GROUP_MODEL_GROUPID: {  
+	            	//2016-12-23	                int uuidHash = msg.getData().getInt(MeshService.EXTRA_UUIDHASH_31);
+//	                Log.v("BLE", "UUIDhash : "+uuidHash);
+       	
+	                Log.v("BLE", "MESSAGE_GROUP_MODEL_GROUPID");
+	                break;
+	            }
+	            case MeshService.MESSAGE_FIRMWARE_VERSION:
+	            	//2016-12-23	                int uuidHash = msg.getData().getInt(MeshService.EXTRA_UUIDHASH_31);
+//	                Log.v("BLE", "UUIDhash : "+uuidHash);
+
+	            	Log.v("BLE", "MESSAGE_FIRMWARE_VERSION");
+	            	break;
+	            case MeshService.MESSAGE_ASSOCIATING_DEVICE:
+//	                int uuidHash = msg.getData().getInt(MeshService.EXTRA_UUIDHASH_31);
+	                Log.v("BLE", "UUIDhash : "+ msg.getData().getInt(MeshService.EXTRA_UUIDHASH_31));
+
+	            	Log.v("BLE", "MESSAGE_ASSOCIATING_DEVICE");
+	            	break;
+	            case MeshService.MESSAGE_RECEIVE_STREAM_DATA_END:
+//	                int uuidHash = msg.getData().getInt(MeshService.EXTRA_UUIDHASH_31);
+	                Log.v("BLE", "UUIDhash : "+ msg.getData().getInt(MeshService.EXTRA_UUIDHASH_31));
+
+	            	Log.v("BLE", "MESSAGE_RECEIVE_STREAM_DATA_END");
+	            	
+	            }            
+	        }
+	    };
+//2016-12-23 伪parentActivity
+	    public void onConnected(){
+			 mMeshHandler.postDelayed(transmitCallback,240);
+//			 AttentionModelApi.setState(0,true,1000);
+//			 疑似遗漏的方法
+			 Log.v("BLE", "LE onconnect ");
+			 mMeshHandler.removeCallbacks(connectTimeout);
+		 }
+//	    
+	    private Runnable transmitCallback = new Runnable() {
+	        @Override
+	        public void run() {
+	        	Log.v("BLE", "transmitCallback RUN : "+ mNewColor +"  Color is:"+ mColorToSend);
+	            if (mNewColor) {
+	                          
+	                    byte red = (byte) (Color.red(mColorToSend) & 0xFF);
+	                    byte green = (byte) (Color.green(mColorToSend) & 0xFF);
+	                    byte blue = (byte) (Color.blue(mColorToSend) & 0xFF);
+	                    Log.v("BLE-COLOR", "the mColorTosend is B: "+ mColorToSend );
+	                    try{
+	                    	LightModelApi.setRgb(0, red, green, blue, (byte)0xFF, 0, false);
+	                    	Log.v("LightModelApi", "LightModelApi  successed : "+mColorToSend);
+//	                    	
+	                    }catch(Exception e){
+	                    	Log.v("LightModelApi", "LightModelApi not successed : "+e);
+	                    }
+	                	Log.v("BLE-COLOR","the mColorTosend is A : "+ mColorToSend);
+//	                	Log.v("BLE-COLOR","the mColorTosend BLUE is : "+ Color.BLUE);
+	                mNewColor = false;
+	            }                        
+	            mMeshHandler.postDelayed(this, 1000);
+	        }
+	    };
+//	    
+	    private LeScanCallback mScanCallBack = new LeScanCallback() {
+	        @Override
+	        public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) { 
+	        	Log.v("BLE","mScanCallBack : rssi "+rssi);
+	        	mService.processMeshAdvert(scanRecord, rssi);
+	        }
+	 };
+	 
+	 public void associateDevice(int uuidHash) {
+			Log.v("BLE", "associateDevice :"+uuidHash);
+	        mService.associateDevice(uuidHash, 0);
+	    }
+	 
+	 private Runnable connectTimeout = new Runnable() {
+	        @Override
+	        public void run() {
+	    		Log.v("BLE", "connectTimeout");
+	        	if (mNumConnectAttempts < 3) {
+	        		mMeshHandler.postDelayed(connectTimeout, 10000);
+	        		connect();
+	        	}
+	        	else {
+		        	Log.v("BLE", "mNumConnectAttempts :"+mNumConnectAttempts);
+//		        	finish();
+	        	}
+	        }        
+	    };
+	    
+//2016年12月29日 添加 onDestroy事件
+	    @Override
+		public void onDestroy() {
+	    	Log.v("BLE-CSR","unbindService");
+			cordova.getActivity().unbindService(mServiceConnection);
+		}
+}

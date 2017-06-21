@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <!--2017年3月15日 漏缆 js 文件；可实现定数定量显示入侵信息  -->
+    <!--<script src="multi_loulan.js"></script>-->
+    <link rel="stylesheet" type="text/css" href="./colorpicker/jcolor.min.css">
+    <script src="./js/meshTest.js"></script>
+    <script type="text/javascript" src="./colorpicker/jquery.js"></script>
+    <script type="text/javascript" src="./colorpicker/jcolor.min.js"></script>
+    <script src="./colorpicker/colorpicker.min.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/require.js"></script>
+    <script>
+        // 全局变量 groups,lights ；迁移到cordova应用上的时候，使用插件获取；
+//        var groups = [{"name":"group1","deviceId":1},{"name":"group2","deviceId":2},{"name":"group3","deviceId":3},{"name":"group4","deviceId":4}]
+//        var lights = [{"name":"lights11","deviceId":11},{"name":"lights12","deviceId":12},{"name":"lights13","deviceId":13},{"name":"lights14","deviceId":14}]
+//        window.localStorage.setItem("mesh",'{"meshs":[{"meshName":"cl","lights":[{"name":"light_Lab","uuidHash":"ssssssss","deviceId":37265,"color":"#74aab5","power":0,"brightness":0,"maxGroups":4,"groups":[3,2,0]},{"name":"light1","uuidHash":"bbbbbbbb","deviceId":37267,"color":"#07ec94","power":0,"brightness":0,"maxGroups":4,"groups":[1,2,3,0]}],"groups":[{"name":"group_A","deviceId":1,"lights":[37267],"color":"#aee6a2","power":0,"brightness":0},{"name":"group_B","deviceId":2,"lights":[37265,37267,37267],"color":"#f9bd8c","power":0,"brightness":0},{"name":"group3","deviceId":3,"lights":[37265,37267],"color":"#2abd8c","power":0,"brightness":0}]}]}')
+
+//        var groups = window.mesh1.
+        var leftshow = function(){
+            document.getElementById('settingSlider').style.display='none'
+            document.getElementById('body').onclick = function(e){
+                if(e.clientX > document.getElementById('leftSlider').offsetWidth){
+//                    document.getElementById('settingSlider').style.display='none'
+                    document.getElementById('leftSlider').style.display='none'
+                    document.getElementById("body").onclick = null;
+                }
+            }
+            document.getElementById('leftSlider').style.display === ''?document.getElementById('leftSlider').style.display='none':document.getElementById('leftSlider').style.display='';
+        }
+        var rightshow = function(){
+            document.getElementById('leftSlider').style.display='none'
+            document.getElementById('body').onclick = function(e){
+//                console.log(e.clientX+" "+document.getElementById('settingSlider').offsetLeft+" "+document.getElementById('settingSlider').offsetWidth+" "+document.getElementById('settingSlider').clientLeft)
+
+                if(e.clientX < document.getElementById('settingSlider').offsetLeft){
+                    document.getElementById('settingSlider').style.display='none'
+//                    document.getElementById('leftSlider').style.display='none'
+                    document.getElementById("body").onclick = null;
+                }
+
+            }
+            document.getElementById('settingSlider').style.display === ''?document.getElementById('settingSlider').style.display='none':document.getElementById('settingSlider').style.display='';
+        }
+
+        var showGroups = function(){
+            var groupButton = document.getElementById("groupControl");
+
+//            document.getElementById("groupControl").style.display = ''
+            if(groupButton.children.length <1){
+//                console.time("dom create")
+                var groups = window.mesh1.groups;
+                alert(groups);
+                alert(window.mesh1);
+                for(var i =0 ;i<groups.length;i++){
+
+                    (function(i){
+                        var newChild = document.createElement("tr")
+                        var aaa = "group"+groups[i].deviceId;
+                        newChild.innerHTML = "<td style='width: 50%;height:50px;border-bottom: dashed;;border-bottom-color: bisque'>"+groups[i].name+"</td>"+"<td id="+aaa+" style='width: 50%;'>"+groups[i].deviceId+"</td>"
+                        newChild.setAttribute("value",groups[i].deviceId);
+                        newChild.setAttribute("style","width:100%;")
+                        newChild.onclick=(function(){
+                            return function(aa){
+                                console.log(aa.target.parentNode.getAttribute('value'))
+                                if(aa&&aa.stopPropagation){//非IE浏览器
+                                    aa.stopPropagation();
+                                }
+                                else{//IE浏览器
+                                    window.event.cancelBubble=true;
+                                }
+                            }
+                        })()
+
+                        /* 本题闭包处理方案 若干*/
+                        /*(function(){
+                         return function(aa){alert(aa.value)}
+                         })(newChild)*/
+                        /*(function(){
+                         return function(aa){alert(aa.target.value)}
+                         })(groups[i].deviceId)*/
+                        /*function(){
+                         alert(this.value);
+                         }*/
+                        groupButton.appendChild(newChild)
+                        console.log(aaa)
+                        $("#"+aaa).colorpicker({
+                            color: groups[i].color,
+                            colorSpace: 'hsl',
+                            displayColor:'hex',
+                            labels:true
+                        });
+                        $("#"+aaa).on('newcolor',function(ev,color){
+                            console.log(ev)
+                            console.log("the deviceId is "+groups[i].deviceId)
+                            console.log(color.toString('hsla'))
+                        })
+                    })(i);
+                }
+//                console.timeEnd("dom create")
+            }else{
+                groupButton.innerHTML='';
+            }
+//            document.getElementById("sigleControl").style.display = 'none'
+            document.getElementById("sigleControl").innerHTML='';
+        }
+
+        var showLights = function(){
+            var groupButton = document.getElementById("sigleControl");
+
+//            document.getElementById("sigleControl").style.display = ''
+            if(groupButton.children.length <1){
+                var lights = window.mesh1.lights;
+                for(var i =0 ;i<lights.length;i++){
+                    (function(i){
+                        var newChild = document.createElement("tr")
+                        var aaa = "light"+lights[i].deviceId
+                        newChild.innerHTML = "<td  style='width: 50%;'>"+lights[i].name+"</td>"+"<td id="+aaa+" style='width: 50%;'>"+lights[i].deviceId+"</td>"
+                        newChild.setAttribute("value",lights[i].deviceId);
+                        newChild.setAttribute("style","width:100%;")
+                        newChild.onclick=(function(){
+                            return function(aa){console.log(aa.target.parentNode.getAttribute('value'))
+                                if(aa&&aa.stopPropagation){//非IE浏览器
+                                    aa.stopPropagation();
+                                }
+                                else{//IE浏览器
+                                    window.event.cancelBubble=true;
+                                }
+                            }
+                        })()
+                        console.log(aaa)
+                        groupButton.appendChild(newChild)
+                        $("#"+aaa).colorpicker({
+                            color:  lights[i].color,
+                            colorSpace: 'hsl',
+                            displayColor:'hex',
+                            labels:true
+                        });
+
+                        $("#"+aaa).on('newcolor',function(ev,color){
+                            console.log(ev)
+                            console.log(color.toString('hsla'))
+                            // 将颜色存起来
+                            console.log(lights[i].deviceId)
+                        })
+                    })(i);
+                }
+            }else{
+                groupButton.innerHTML='';
+            }
+//            document.getElementById("groupControl").style.display = 'none'
+            document.getElementById("groupControl").innerHTML='';
+        }
+
+    </script>
+    <style>
+        #leftSlider{
+            position:absolute;
+            z-index: 19;
+            top: 0;
+            left:0;
+            width: 60%;
+            height: 100%;
+        }
+        #settingSlider{
+            position:absolute;
+            z-index: 2;
+            top: 0;
+            left:40%;
+            width: 60%;
+            height: 100%;
+        }
+
+        #control{
+            position:absolute;
+            z-index: 1;
+            top: 0;
+            left:0%;
+            width: 100%;
+        }
+
+    </style>
+</head>
+<body id="body" style="width:100%">
+
+
+    <div id="control">
+        <div>
+            <button style="float: left;width: 10%;" onclick="leftshow()">左</button><!--<button style="width:80%" ></button>--><button style="float: right;width: 10%;" onclick="rightshow()">右</button>
+
+
+        </div><!--
+        <div style="clear: both;"></div>-->
+        <!--<section>
+            <div class="color-picker-hsl"></div>
+            <script class="exposed">
+                $('.color-picker-hsl').colorpicker({
+                    color: '#faaab5',
+                    colorSpace: 'hsl'
+                });
+            </script>
+        </section>-->
+        <div style="clear: both;">
+
+            <div style="margin: 0 auto;width:50px; ">
+                <section>
+                    <div class="color-picker-hsl"></div>
+                    <li id="color-picker-hsl"></li>
+                    <div class="color-picker-hsl"></div>
+                    <script class="exposed">
+//                        console.time("create colorpicker")
+                        $('.color-picker-hsl').colorpicker({
+                            color: '#faaab5',
+                            colorSpace: 'hsl',
+                            displayColor:'hex',
+                            labels:true
+                        });
+
+                        $('.color-picker-hsl').on('newcolor',function(ev,color){
+                            console.log(ev)
+                            console.log(color.toString('hsla'))
+                        })
+                        var aaa =  '#color-picker-hsl'
+                        $(aaa).on('newcolor',function(ev,color){
+                            console.log(ev)
+                            console.log(color.toString('hsla'))
+                        })
+                        $('#color-picker-hsl').colorpicker({
+                            color: '#faaab5',
+                            colorSpace: 'hsl',
+                            displayColor:'hex',
+                            labels:true
+                        });
+//                        console.timeEnd("create colorpicker")
+                    </script>
+                </section>
+            </div>
+            <div style="width:300px; margin:0 auto;background-color: aqua">
+                <div id="choos" style=" width: 75%; height: 200px;float: left;"></div>
+                <div id="picker" style="width: 25%; height: 200px;float: left;"></div>
+                <script>
+                    ColorPicker(
+                            document.getElementById('picker'),document.getElementById('choos'),
+                            function(hex,hsv,rgb){
+                                console.log(hex)
+                                console.log(hsv)
+                                console.log(rgb)
+                            }
+                    )
+                </script>
+            </div>
+            <div>
+                <button onclick="alert(window.localStorage.getItem('mesh'))">存</button>
+                <button onclick="alert(window.mesh1)">取</button>
+            </div>
+            <div style="text-align:center;clear: both">
+                <input type="range" min="0" max="100" style='width:300px'>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="leftSlider" style="display:none;border: dashed ;background-color: #4B946A;">
+
+         <div>
+             <button style="float: right;top: 0%;" onclick="leftshow()">返回</button>
+         </div>
+            <div  style="clear: both;"onclick="showGroups()" >
+                <button style="width: 100%;">分组控制</button>
+                <table id="groupControl" style="width: 100%;"></table>
+            </div>
+         <div  style="clear: both;"onclick="showLights()">
+            <button style="width: 100%;">单个控制</button>
+             <table id="sigleControl" style="width: 100%;"></table>
+         </div>
+
+
+    </div>
+
+    <div id="settingSlider"  style="display:none ;border: dashed;background-color: #4B946A">
+         <div>
+             <!--2017年3月15日  漏缆入侵页面的功能-- 可定数定量更新入侵报警信息，并设置查看事件；结合  -->
+            <!--<table id="intruList">
+                <tr>
+                    <th>入侵时间</th>
+                    <th>入侵点数</th>
+                </tr>
+                <tr>
+                    <th>
+                        2017年3月15日
+                    </th>
+                    <th>
+                        34 m
+                    </th>
+                </tr>
+            </table>-->
+
+        </div>
+        <div>
+            <button style="float: left;top: 0%;" onclick="rightshow()">返回</button>
+        </div>
+        <div  style="clear: both;"onclick="showGroups()" >
+            <button style="width: 100%;">分组</button>
+           <!-- <table id="groupControl" style="width: 100%;"></table>-->
+        </div>
+        <div  style="clear: both;"onclick="showLights()">
+            <button style="width: 100%;">扫描</button>
+           <!-- <table id="sigleControl" style="width: 100%;"></table>-->
+        </div>
+        <div  style="clear: both;"onclick="showLights()">
+            <button style="width: 100%;">绑定</button>
+            <!-- <table id="sigleControl" style="width: 100%;"></table>-->
+        </div>
+        <div  style="clear: both;"onclick="showLights()">
+            <button style="width: 100%;">设置</button>
+            <!-- <table id="sigleControl" style="width: 100%;"></table>-->
+        </div>
+    </div>
+
+
+<script>
+    initMesh();
+</script>
+</body>
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+        <link rel="stylesheet" type="text/css" href="./colorpicker/jcolor.min.css">
+        <link rel="stylesheet" type="text/css" href="./colorpicker/jquery.mobile-1.4.5.css">
+        <script type="text/javascript" src="./colorpicker/jquery.js"></script>
+        <script src="./colorpicker/jquery.mobile-1.4.5.js"></script>
+
+
+        <title>CSR灯泡</title>
+    </head>
+    <body>
+        <!--<div >-->
+
+            <!--&lt;!&ndash;<div>-->
+                <!--<button style="float: right;top: 0%;" id="leftshow_b">返回</button>-->
+            <!--</div>&ndash;&gt;-->
+            <!--<div  style="clear: both;" id="showGroups_b" >-->
+                <!--<button style="width: 100%;">分组控制</button>-->
+                <!--<table id="groupControl" style="width: 100%;"></table>-->
+            <!--</div>-->
+            <!--<div  style="clear: both;" id="showLights_b">-->
+                <!--<button style="width: 100%;">单个控制</button>-->
+                <!--<table id="sigleControl" style="width: 100%;"></table>-->
+            <!--</div>-->
+
+            <!--&lt;!&ndash;<h1>Apache Cordova</h1>&ndash;&gt;-->
+            <!--<div id="ole_control">-->
+            <!--<div id="deviceready" class="blink">-->
+                <!--<p class="event listening">Connecting to Device</p>-->
+                <!--<p class="event received">Device is Ready</p>-->
+            <!--</div>-->
+            <!--&lt;!&ndash; <p> <button id="scanButton1" onclick="scanButtonjj()">扫描</button>  <button id="clickButton1" onclick="clickButtonjj()">连接</button> <button id="changeButton1" onclick="changeButtonjj()">改色</button> </p>-->
+                <!--<p> &ndash;&gt;-->
+            <!--<p><button id="startScan">startScan</button><button id="stopScan">stopScan</button><button id="findMesh">findMesh</button><button id="setPower">setPower</button></p>-->
+            <!--<button id="blueClick">blueClick</button><button id ="setColor">RandomColor</button><button id="setBrightness">亮度</button><button id="setGroup">分组</button>-->
+            <!--<button id="getAssociableDevice">获取待绑定的设备</button><button id="associateDevice">绑定设备</button><button id="getDevcieId">获取ID</button>-->
+            <!--<p>-->
+                <!--<button id="store">保存数据</button><button id="read">读取数据</button>-->
+            <!--</p>-->
+            <!--<button id="color">新页面</button><button id="meshL">mesh-L</button>-->
+            <!--<button id="meshW">mesh-W</button>-->
+            <!--<ul id="deviceList">-->
+            <!--</ul>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--&lt;!&ndash;2017年4月1日 ：&ndash;&gt;-->
+
+        <!-- 2017年4月18日 自己写的-->
+    <!--<div style="width:100%;height:100%">-->
+        <!--<div class="title">CSRMesh</div>-->
+
+        <!--<div class="mainH">-->
+            <!--<div class="devices" id="scanPage">-->
+                <!--<td class="deviceFind">-->
+                    <!--<tr class="img">图</tr>-->
+                    <!--<tr class="deviceName">NAME</tr>-->
+                    <!--<tr class="deviceAddress">ADDRESS</tr>-->
+                <!--</td>-->
+                <!--&lt;!&ndash; 两种只取其一 &ndash;&gt;-->
+                <!--<td class="deviceFind">-->
+                    <!--<tr class="img">图</tr>-->
+                    <!--<tr class="uuidHash">UUID</tr>-->
+                <!--</td>-->
+            <!--</div>-->
+
+            <!--<div class="control" id="controlPage">-->
+
+            <!--</div>-->
+
+            <!--<div class="setting" id="settingPage">-->
+                <!--<div class="deviceSet">-->
+                    <!--<div class="titleG">灯泡组-->
+                    <!--<a>增加按钮</a></div>-->
+                    <!--<td class="deviceFind">-->
+                        <!--<tr class="img"></tr>-->
+                        <!--<tr class="groupName"></tr>-->
+                        <!--<tr class="delete"></tr>-->
+                        <!--<tr class="show-lights-groups">获得组内灯泡</tr>-->
+                    <!--</td>-->
+                <!--</div>-->
+
+                <!--<div class="groupSet">-->
+
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <!--<div class="bottom">-->
+            <!--<button class="bottomButton"><a href="#scanPage">扫描</a></button>-->
+            <!--<button class="bottomButton"><a href="#controlPage">控制</a></button>-->
+            <!--<button class="bottomButton"><a href="#settingPage">设置</a></button>-->
+        <!--</div>-->
+    <!--</div>-->
+
+    <!-- 2017年4月18日 JQueryMobile 写法-->
+    <div data-role="page" id="scanPage" data-position="fixed" data-tap-toggle="false" style="text-transform: none; ">
+        <div data-role="header" data-position="fixed" data-tap-toggle="false">
+            <h1>扫描设置</h1>
+        </div><!-- /header -->
+
+        <div role="main" class="ui-content">
+            <div>
+                <a data-role="button" data-inline="true">开始扫描</a>
+                <a data-role="button" data-inline="true">停止扫描</a>
+            </div>
+
+        </div><!-- /content -->
+
+        <div data-role="footer" data-position="fixed" data-tap-toggle="false">
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="#">扫描</a></li>
+                    <li><a href="#controlPage">控制</a></li>
+                    <li><a href="#settingPage" class="settingBottom">设置</a></li>
+                </ul>
+            </div>
+        </div><!-- /footer -->
+    </div>
+
+     <div data-role="page" id="controlPage">
+         <div data-role="header" data-position="fixed" data-tap-toggle="false">
+             <h1>灯光控制</h1>
+         </div><!-- /header -->
+
+         <div role="main" class="ui-content">
+         </div><!-- /content -->
+
+         <div data-role="footer" data-position="fixed" data-tap-toggle="false">
+             <div data-role="navbar">
+                 <ul>
+                     <li><a href="#scanPage">扫描</a></li>
+                     <li><a href="#">控制</a></li>
+                     <li><a href="#settingPage" class="settingBottom">设置</a></li>
+                 </ul>
+             </div>
+
+         </div><!-- /footer -->
+    </div>
+
+     <div data-role="page" id="settingPage" style="text-transform: none">
+         <div data-role="header" data-position="fixed" data-tap-toggle="false">
+             <h1>组网设置</h1>
+         </div><!-- /header -->
+
+         <div role="main" class="ui-btn ui-content">
+             <!--<a class="ui-btn ui-icon-plus ui-btn-icon-right"><h2>分组管理</h2></a>&lt;!&ndash;监听事件怎么添加进去&ndash;&gt;-->
+             <!--<a data-icon="plus"><h2>分组管理</h2></a>&lt;!&ndash;监听事件怎么添加进去&ndash;&gt;-->
+             <!--<h2  style="padding: 0;">分组管理</h2>-->
+             <!--<h2 class="ui-li-divider ui-icon-edit">分组管理</h2>-->
+             <!--<a href="#" class="ui-li-divider ui-corner-all ui-icon-plus ui-btn-icon-right">分组管理</a>-->
+             <ul data-role="listview" id="groupList">
+                 <!--<li><a href="#">列表项</a></li>-->
+
+                 <!--<li><a href="#">列表项</a></li>-->
+
+                 <!--<li data-role="list-divider"  role="heading" class="ui-li-has-icon ui-li-divider ui-bar-a ui-first-child">-->
+                 <a  name="group" class="addGroup ui-btn ui-btn-icon-right ui-icon-plus">
+                         分组管理
+                 </a>
+                 <!--</li>-->
+                 <!-- 暂时只实现到这个程度，准备在JMtest.js 中添加 .addGroup 的点击事件 -->
+
+                 <!-- 下面的内容均是根据window.mesh1生成 -->
+                 <li class="ui-li-has-alt ui-last-child">
+                     <a href="#demo-mail" class="ui-btn">
+                         <h3>Group_A</h3>
+                         <!-- 下面内容根据window.mesh1.groups[i].lights 生成 -->
+                         <td>light1</td>
+                         <td>light1</td>
+                         <td>light1</td>
+                         <!--<td class="ui-icon-plus"></td> 无效-->
+                         <!--<td class="ui-btn ui-btn-icon-notext ui-icon-plus"></td>-->
+                         <p class="ui-li-aside">UUIDHash</p>
+                         <!--<p class="ui-li-aside"><strong>修改</strong></p>-->
+                     </a>
+                     <!--<a href="#groupSet" data-rel="popup" class="delete ui-btn ui-btn-icon-notext ui-icon-edit" data-position-to="window" data-transition="fade"></a>-->
+                     <a href="#" name="kkk" class="edit ui-btn ui-btn-icon-notext ui-icon-edit" ></a>
+                     <!-- 点击编辑按钮后，怎么处理
+                            弹出更改菜单？
+                                里面是一个表单，用于更改 名字，更改所属灯泡 或 删除
+                            -->
+                 </li>
+
+                 <li class="ui-li-has-alt ui-first-child">
+                     <a class="ui-btn">
+                         <tr>
+                             <h3>Group_A</h3>
+                         </tr>
+                         <!--<p class="topic">下属分组：</p>-->
+                         <tr>
+                             <td>light1</td>
+                             <td>light1</td>
+                             <td>light1</td>
+                         </tr>
+
+                         <p class="ui-li-aside"><strong>UUIDHash</strong></p>
+                         <!--<p class="ui-li-aside"><strong>修改</strong></p>-->
+                     </a>
+                     <a href="#" class="delete ui-btn ui-btn-icon-notext ui-icon-delete" title="Delete"></a>
+                 </li>
+             </ul>
+
+             <!--<h2>灯泡管理</h2>-->
+             <p>  </p>
+             <!-- 2017年4月19日 普通列表 灯泡管理 -->
+             <!--<ul data-role="listview">-->
+                 <!--<li data-role="list-divider" role="heading" class="ui-li-divider ui-bar-a ui-first-child">灯泡管理</li>-->
+                 <!--<li><a href="#">列表项</a></li>-->
+                 <!--<li><a href="#">列表项</a></li>-->
+                 <!--<li><a href="#">列表项</a></li>-->
+             <!--</ul>-->
+             <ul data-role="listview" id="lightList">
+                 <a href="#scanPage" name="light" class="addLight ui-btn ui-btn-icon-right ui-icon-plus">灯泡管理</a>
+
+             <li class="ui-li-has-alt  ">
+                 <a href="#" class="ui-btn">
+                     <h3>light</h3>
+                     <td>group_A</td>
+                     <td>group_B</td>
+                     <p class="ui-li-aside">uuidHash</p>
+                 </a>
+                 <a href="#lightSet" class="lightEdit ui-btn-icon-right ui-btn ui-icon-edit"></a>
+             </li>
+             </ul>
+
+
+         </div><!-- /content -->
+
+         <div data-role="footer" data-position="fixed" data-tap-toggle="false">
+             <div data-role="navbar">
+                 <ul>
+                     <li><a href="#scanPage">扫描</a></li>
+                     <li><a href="#controlPage">控制</a></li>
+                     <li><a href="#" class="settingBottom">设置</a></li>
+                 </ul>
+             </div>
+         </div><!-- /footer -->
+    </div>
+
+        <!-- 组设置菜单 弹出层 -->
+        <div data-role="popup" id="groupSet" data-position-to="window" class="ui-content"  style="background-color: #d6d6d6;max-width:120%;max-height:120%;border:crimson solid;" hidden>
+            <!-- 动态去写 -->
+            <label>组名：</label><input type="text" value="sss">
+            <label>灯泡：</label>
+            <!--&lt;!&ndash; 下面读取分组的灯泡情况；遍历全部灯泡，若已经在这个组里，则将其 选中 &ndash;&gt;-->
+            <!-- 第二种方法 -- 在 popup 上显示选择的 -->
+            <fieldset data-role="controlgroup">
+                <label>
+                    <input type="checkbox" name="cb0" value="37888">light1
+                </label>
+                <label>
+                    <input type="checkbox" name="cb0" checked >light2
+                    <!-- 默认选中项 -->
+                </label>
+                <label>
+                    <input type="checkbox" name="cb0">light3
+                </label>
+            </fieldset>
+            <!--<a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c">Cancel</a>-->
+            <a href="#" id="saveChange" data-role="button" data-inline="true" >保存</a><a href="#" data-role="button" data-inline="true" >删除</a><a href="#" data-role="button" data-inline="true" data-rel="back">取消</a>
+        </div>
+
+        <!-- 灯泡设置 -->
+        <div data-role="popup" id="lightSet" data-position-to="window" class="ui-content"  style="background-color: #d6d6d6;max-width:120%;max-height:120%;border:crimson solid;" hidden>
+            <label>灯泡名：</label><input type="text" value="sss">
+            <label>所属组：</label>
+            <fieldset data-role="controlgroup">
+                <label>
+                    <input type="checkbox" name="cb0" value="37888">light1
+                </label>
+                <label>
+                    <input type="checkbox" name="cb0" checked >light2
+                    <!-- 默认选中项 -->
+                </label>
+                <label>
+                    <input type="checkbox" name="cb0">light3
+                </label>
+            </fieldset>
+            <a href="#" id="saveChangeL" data-role="button" data-inline="true" >保存</a><a href="#" data-role="button" data-inline="true" >删除</a><a href="#" data-role="button" data-inline="true" data-rel="back">取消</a>
+        </div>
+
+        <!-- 组添加菜单 弹出层 -->
+        <div data-role="popup" id="AddGroup" data-position-to="window" class="ui-content"  style="background-color:#d6d6d6 ; border:crimson solid;" hidden>
+            <!-- 动态去写 -->
+            <label>组名：</label><input type="text" id="newGroupName" value="sss">
+            <label>灯泡：</label>
+            <!--&lt;!&ndash; 下面读取分组的灯泡情况；遍历全部灯泡，若已经在这个组里，则将其 选中 &ndash;&gt;-->
+            <!-- 第二种方法 -- 在 popup 上显示选择的 -->
+            <fieldset data-role="controlgroup">
+                <label>
+                    <input type="checkbox" name="cb0" value="37888">light1
+                </label>
+                <label>
+                    <input type="checkbox" name="cb0">light2
+                    <!-- 默认选中项 -->
+                </label>
+                <label>
+                    <input type="checkbox" name="cb0">light3
+                </label>
+            </fieldset>
+            <!--<a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c">Cancel</a>-->
+            <a href="#" id="Add" data-role="button" data-inline="true" >保存</a><a href="#" data-role="button" data-inline="true" data-rel="back">取消</a>
+        </div>
+    <!--<div data-role="popup" id="groupSet" class="ui-content">-->
+            <!--    <form data-role="fieldset">-->
+            <!--        <div class="ui-field-contain">-->
+            <!--            <label for="xalign">X Alignment</label>-->
+            <!--            <input type="range" id="xalign" name="xalign" value="0.5" min="-1" max="2" step="0.5">-->
+            <!--        </div>-->
+            <!--        <div class="ui-field-contain">-->
+            <!--            <label for="yalign">Y Alignment</label>-->
+            <!--            <input type="range" id="yalign" name="yalign" value="0.5" min="-1" max="2" step="0.5">-->
+            <!--        </div>-->
+            <!--    </form>-->
+    <!--</div>-->
+
+    </body>
+    <script type="text/javascript" src="cordova.js"></script>
+    <!--<script src="./js/JMtest.js"></script>-->
+
+    <!--<script type="text/javascript" src="./colorpicker/jquery.js"></script>-->
+    <script type="text/javascript" src="./colorpicker/jcolor.min.js"></script>
+
+    <script type="text/javascript" src="js/index.js"></script>
+</html>
+

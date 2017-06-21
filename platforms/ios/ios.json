@@ -1,0 +1,28 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-csrmesh": {
+            "PACKAGE_NAME": "com.csr.mesh.light"
+        }
+    },
+    "dependent_plugins": {},
+    "modules": [
+        {
+            "id": "cordova-plugin-csrmesh.csrmesh",
+            "file": "plugins/cordova-plugin-csrmesh/www/csrmesh.js",
+            "pluginId": "cordova-plugin-csrmesh",
+            "clobbers": [
+                "csrmesh"
+            ]
+        }
+    ],
+    "plugin_metadata": {
+        "cordova-plugin-csrmesh": "0.0.1"
+    }
+}
