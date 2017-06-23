@@ -17,11 +17,12 @@
     <!--<script type="text/javascript" src="47.93.228.84:3315/colorpicker/jcolor.min.js"></script>-->
 
     <link rel="stylesheet" type="text/css" href="css/index.css">
-    <link rel="stylesheet" type="text/css" href="./colorpicker/jcolor.min.css">
-    <link rel="stylesheet" type="text/css" href="./colorpicker/jquery.mobile-1.4.5.css">
     <script type="text/javascript" src="./colorpicker/jquery.js"></script>
-    <script src="./colorpicker/jquery.mobile-1.4.5.js"></script>
+    <link rel="stylesheet" type="text/css" href="./colorpicker/jcolor.min.css">
     <script type="text/javascript" src="./colorpicker/jcolor.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="./colorpicker/jquery.mobile-1.4.5.css">
+    <script src="./colorpicker/jquery.mobile-1.4.5.js"></script>
+    
     <style>
         .chenliang{
             color:red;
@@ -35,44 +36,7 @@
 远程动态加载测试
 <div id="remote1">使用document.body</div>
 <div id="remote2">使用document.body</div>
-<div data-role="page" id="scanPage" data-position="fixed" data-tap-toggle="false" style="text-transform: none; ">
-    <div data-role="header" data-position="fixed" data-tap-toggle="false">
-        <h1>扫描设置</h1>
-    </div><!-- /header -->
 
-    <div role="main" class="ui-content">
-        <div data-role="controlgroup" data-type="horizontal">
-
-            <a data-role="button" id="startScan" data-inline="true" class="ui-btn-inline">开始扫描</a>
-            <a data-role="button" id="stopScan" data-inline="true" class="ui-btn-inline">停止扫描</a>
-            <a data-role="button" id="findAssociat" data-inline="true" class="ui-btn-inline">绑定扫描</a>
-
-        </div>
-        <p>   </p>
-        <div>
-            <ul data-role="listview" id="deviceList">
-                <!--<li class="devicePrepar ui-li-has-alt ">
-                    <a href="#" class="ui-btn">
-                        <h3>CSRMESHlight</h3>
-                        <td>00:23:32:67:89</td>
-                    </a>
-                    <a href="#controlPage" name="kkk" class="connect ui-btn ui-btn-icon-notext ui-icon-action" ></a>
-                </li>-->
-            </ul>
-        </div>
-
-    </div><!-- /content -->
-
-    <div data-role="footer" data-position="fixed" data-tap-toggle="false">
-        <div data-role="navbar">
-            <ul>
-                <li><a href="#">扫描</a></li>
-                <li><a href="#controlPage"class="controlPageButton">控制</a></li>
-                <li><a href="#settingPage" class="settingBottom">设置</a></li>
-            </ul>
-        </div>
-    </div><!-- /footer -->
-</div>
 </body>
 <script type="text/javascript" src="cordova.js"></script>
 <script type="text/javascript" src="js/index.js" charset="utf-8"></script>
