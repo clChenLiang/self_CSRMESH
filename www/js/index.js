@@ -55,8 +55,8 @@ function loadRomoteWeb(){
         //var data = '<div class="chenliang">陈亮</div>';//可以
         var data = '<div class="chenliang">陈亮</div>';//可以,加样式测试 --- 成功
         //document.body.innerHTML = data1; // 成功，准备测试，是否没有将jqm 的css样式加载进来
-        document.body.innerHTML = data2;// 测试有无加载上 JQM 的样式;略微有所不同，猜测可能是class也删除的原因；
-        document.body.innerHTML = data1;
+        //document.body.innerHTML = data2;// 测试有无加载上 JQM 的样式;略微有所不同，猜测可能是class也删除的原因；
+        //document.body.innerHTML = data1;
         //$('body').listview('refresh');
         //$("body").innerHTML = data;// 好像可用性不好，不能使用
         console.log("加载页面动作启动");
