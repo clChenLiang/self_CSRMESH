@@ -43,7 +43,28 @@ document.addEventListener("deviceready",function(){
 },false);
 
 function loadRomoteWeb(){
-    $.ajax({
+    try{
+        //var data1 = '<div data-role="page" id="scanPage" data-position="fixed" data-tap-toggle="false" style="text-transform: none; "><div data-role="header" data-position="fixed" data-tap-toggle="false"><h1>扫描设置</h1></div><!-- /header --><div role="main" class="ui-content"><div data-role="controlgroup" data-type="horizontal"><a data-role="button" id="startScan" data-inline="true" class="ui-btn-inline">开始扫描</a><a data-role="button" id="stopScan" data-inline="true" class="ui-btn-inline">停止扫描</a><a data-role="button" id="findAssociat" data-inline="true" class="ui-btn-inline">绑定扫描</a></div><p>   </p><div><ul data-role="listview" id="deviceList"><!--<li class="devicePrepar ui-li-has-alt "><a href="#" class="ui-btn"><h3>CSRMESHlight</h3><td>00:23:32:67:89</td></a><a href="#controlPage" name="kkk" class="connect ui-btn ui-btn-icon-notext ui-icon-action" ></a></li>--></ul></div></div><!-- /content --><div data-role="footer" data-position="fixed" data-tap-toggle="false"><div data-role="navbar"><ul><li><a href="#">扫描</a></li><li><a href="#controlPage"class="controlPageButton">控制</a></li><li><a href="#settingPage" class="settingBottom">设置</a></li></ul></div></div><!-- /footer --></div>';
+        // 上面的为不支持的字符串
+        var data1 = '<div data-role="header" data-position="fixed" data-tap-toggle="false"><h1>扫描设置</h1></div><!-- /header --><div role="main" class="ui-content"><div data-role="controlgroup" data-type="horizontal"><a data-role="button" id="startScan" data-inline="true" class="ui-btn-inline">开始扫描</a><a data-role="button" id="stopScan" data-inline="true" class="ui-btn-inline">停止扫描</a><a data-role="button" id="findAssociat" data-inline="true" class="ui-btn-inline">绑定扫描</a></div><p>   </p><div><ul data-role="listview" id="deviceList"><!--<li class="devicePrepar ui-li-has-alt "><a href="#" class="ui-btn"><h3>CSRMESHlight</h3><td>00:23:32:67:89</td></a><a href="#controlPage" name="kkk" class="connect ui-btn ui-btn-icon-notext ui-icon-action" ></a></li>--></ul></div></div><!-- /content --><div data-role="footer" data-position="fixed" data-tap-toggle="false"><div data-role="navbar"><ul><li><a href="#">扫描</a></li><li><a href="#controlPage"class="controlPageButton">控制</a></li><li><a href="#settingPage" class="settingBottom">设置</a></li></ul></div></div>';
+        var data2 = '<div><h1>扫描设置</h1></div><!-- /header --><div ><div><a class="ui-btn-inline">开始扫描</a><a class="ui-btn-inline">停止扫描</a><a class="ui-btn-inline">绑定扫描</a></div><p>   </p><div><ul><!--<li class="devicePrepar ui-li-has-alt "><a href="#" class="ui-btn"><h3>CSRMESHlight</h3><td>00:23:32:67:89</td></a><a href="#controlPage" name="kkk" class="connect ui-btn ui-btn-icon-notext ui-icon-action" ></a></li>--></ul></div></div><!-- /content --><div ><div ><ul><li><a href="#">扫描</a></li><li><a href="#controlPage"class="controlPageButton">控制</a></li><li><a href="#settingPage" class="settingBottom">设置</a></li></ul></div></div>';
+
+        var data = "<div style='background:red'>abcdsadfa</div>";// 可生成
+        //$("body").innerHTML = data;
+        //document.getElementsByTagName("body")[0].innerHTML = data;// 可生成
+        //var data = '<div class="chenliang">陈亮</div>';//可以
+        var data = '<div class="chenliang">陈亮</div>';//可以,加样式测试 --- 成功
+        //document.body.innerHTML = data1; // 成功，准备测试，是否没有将jqm 的css样式加载进来
+        document.body.innerHTML = data2;// 测试有无加载上 JQM 的样式;略微有所不同，猜测可能是class也删除的原因；
+        document.body.innerHTML = data1;
+        //$('body').listview('refresh');
+        //$("body").innerHTML = data;// 好像可用性不好，不能使用
+        console.log("加载页面动作启动");
+    }catch(e){
+        console.log("加载页面出错 ："+e);
+    }
+
+    /*$.ajax({
         url:"http://47.93.228.84:3315/remoteLoad",
         type:"GET",
         success:function(data){
@@ -53,5 +74,6 @@ function loadRomoteWeb(){
         error:function(e){
             console.log("error",e);
         }
-    })
+    })*/
+
 }
