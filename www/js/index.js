@@ -64,15 +64,22 @@ function loadRomoteWeb(){
         //document.body.appendChild(myDiv);
         console.log("加载页面动作启动");
 
-        // 使用普通H5编写页面
-        var data = '<div style="width: 100%;height: 100%;"><label id="show" style="width:80%;height: 30%;">显示内容</label><button id="scan">扫描</button><button id="conn">连接</button><button id="asso">绑定</button> </div>';
+        // 使用普通H5编写页面 /**/
+    /*    var data = '<div style="width: 100%;height: 100%;"><label id="show" style="width:80%;height: 30%;">显示内容</label><button id="scan">扫描</button><button id="conn">连接</button><button id="asso">绑定</button> </div>';
         document.body.innerHTML = data;
         // JS 代码也靠解析出来
         var script = document.createElement("script");
         script.type = "text/javascript";
         //script.src = "47.93.228.84:3315/js/onclick.js";
         script.appendChild(document.createTextNode('$(document).on("click","#scan",function(){ $("#show").val("点击"); try{ csrmesh.startScan(function(){console.log("成功点击")}, function () { console.log("error 点击");  }); }catch(e){ console.log(e);}})'));
-        document.body.appendChild(script);
+
+        document.body.appendChild(script);*/
+
+//  使用body trigger 方法，尝试更新整个页面
+        document.body.innerHTML = data1;
+        $('body').trigger('create');
+
+
     }catch(e){
         console.log("加载页面出错 ："+e);
     }
