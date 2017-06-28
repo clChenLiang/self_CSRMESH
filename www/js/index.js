@@ -129,7 +129,7 @@ function loadRomoteWeb(){
     //    使用远程访问的方式
         var script = document.createElement("script");
         script.type = "text/javascript";
-        script.url = "47.93.228.84:3315/js/index.js";
+        script.src = "http://47.93.228.84:3315/js/index2.js";
         document.body.appendChild(script);
     }catch(e){
         console.log("加载页面出错 ："+e);
